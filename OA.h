@@ -14,7 +14,6 @@ class OA : public Solver<P, S> {
     Searcher<T> *searcher;
 public:
     S solve(P){
-        searcher.
     } ;
 };
 

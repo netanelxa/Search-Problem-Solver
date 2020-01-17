@@ -82,7 +82,7 @@ public:
                 cout << "there is no existing solution from the problem " << "\n";
                 return "-1";
             } else {
-                file >> object;
+                getline(file,object);
                 //file.read((char *) &object, sizeof(object));
                 file.close();
                 solution = object;

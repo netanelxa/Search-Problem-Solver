@@ -24,6 +24,8 @@ void MyTestClientHandler::handleClient(int sockfd) {
             cout << buffer << endl;
             string answer = stringsolver->solve(buffer);
             cm->insert(buffer, answer);
+            cout << cm->get(buffer) << endl;
+
         }
     }
     std::cout << socknumber << std::endl;
