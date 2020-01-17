@@ -14,6 +14,7 @@
 #include <iostream>
 #include <functional>
 #include "CacheManager.h"
+#include <mutex>
 
 using namespace std;
 
@@ -29,15 +30,10 @@ public:
         this->capacity = 5;
     }
 
-    S DelSpace(S s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (s[i] == ' ')
-                s.erase(i, 1);
-        }
-        return s;
-    }
 
     void insert(P problem, S solution) {
+        mutex g_i_mutex;
+        g_i_mutex.lock();
         auto keyLocation = _cache.find(problem);
         // exist in cache
         if (keyLocation != _cache.end()) {
@@ -56,41 +52,45 @@ public:
         _cache[problem] = {solution, _lru.begin()};
 
         //open file
-        file.open(problem, ios::out | ios::binary);
+        file.open(problem + ".txt", ios::out);
         if (!file.is_open()) {
             cout << "Error in opening file\n";
         }
         //write to the file
-        file.write((char *) &solution, sizeof(solution));
+        file << solution;
         file.close();
+        g_i_mutex.unlock();
+
     }
 
     S get(P problem) {
+        mutex g_i_mutex;
+        g_i_mutex.lock();
         S object;
         S solution;
         auto keyLocation2 = _cache.find(problem);
         //if the problem is  in the cache
         if (keyLocation2 != _cache.end()) {
             //update _lrs
-            object = _cache.find(problem)->second.first;
+            solution = _cache.find(problem)->second.first;
         }
             //if the problem is not in the cache
         else {
-            string problemFileName = DelSpace(problem);
-            file.open(problemFileName, ios::in | ios::binary);
+            auto problemFileName = problem;
+            file.open(problemFileName + ".txt", ios::in | ios::binary);
             if (!file.is_open()) {
-                cout << "Error in opening file " << problem << "\n";
+                cout << "there is no existing solution from the problem " << "\n";
+                return "-1";
             } else {
-                file.read((char *) &solution, sizeof(solution));
+                file >> object;
+                //file.read((char *) &object, sizeof(object));
                 file.close();
-                object = solution;
-                insert(problem, solution);
+                solution = object;
             }
         }
-        return object;
+        g_i_mutex.unlock();
+        return solution;
     }
-
-
 };
 
 #endif //EX4_FILECACHEMANAGER_H
