@@ -11,7 +11,7 @@
 #include <iostream>
 #include "FileCacheManager.h"
 #include "CacheManager.h"
-
+using namespace std;
 
 class MyTestClientHandler : public ClientHandler {
     int socknumber;

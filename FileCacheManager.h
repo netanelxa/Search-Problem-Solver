@@ -13,27 +13,36 @@
 #include <fstream>
 #include <iostream>
 #include <functional>
+#include "CacheManager.h"
 
 using namespace std;
 
-template<class P,class S>
+template<class P, class S>
 class FileCacheManager : public CacheManager<P, S> {
 private:
     int capacity;
-    unordered_map<string, pair<T, list<string>::iterator>> _cache;
-    list<string> _lru;
+    unordered_map<P, pair<S, list<string>::iterator>> _cache;
+    list <string> _lru;
     fstream file;
 public:
     FileCacheManager() {
         this->capacity = 5;
     }
 
-    void insert(T obj) {
-        auto keyLocation = _cache.find(this->problem);
+    S DelSpace(S s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (s[i] == ' ')
+                s.erase(i, 1);
+        }
+        return s;
+    }
+
+    void insert(P problem, S solution) {
+        auto keyLocation = _cache.find(problem);
         // exist in cache
         if (keyLocation != _cache.end()) {
-            _cache.erase(_cache.find(this->problem));
-            _lru.remove(this->problem);
+            _cache.erase(_cache.find(problem));
+            _lru.remove(problem);
         }
             //doesnt exist in cache
         else {
@@ -43,51 +52,44 @@ public:
             }
         }
         // update
-        _lru.push_front(this->problem);
-        _cache[this->problem] = {obj, _lru.begin()};
+        _lru.push_front(problem);
+        _cache[problem] = {solution, _lru.begin()};
 
         //open file
-        file.open(obj.class_name + key, ios::out | ios::binary);
+        file.open(problem, ios::out | ios::binary);
         if (!file.is_open()) {
             cout << "Error in opening file\n";
         }
         //write to the file
-        file.write((char *) &obj, sizeof(obj));
+        file.write((char *) &solution, sizeof(solution));
         file.close();
     }
 
-    T get(string key) {
-        T object;
-        T obj;
-        auto keyLocation2 = _cache.find(key);
-
-        //if the key is  in the cach
+    S get(P problem) {
+        S object;
+        S solution;
+        auto keyLocation2 = _cache.find(problem);
+        //if the problem is  in the cache
         if (keyLocation2 != _cache.end()) {
             //update _lrs
-            insert(key, _cache.find(key)->second.first);
-            object = _cache.find(key)->second.first;
+            object = _cache.find(problem)->second.first;
         }
-            //if the key is not in the cach
-
+            //if the problem is not in the cache
         else {
-            file.open(T::class_name + key, ios::in | ios::binary);
+            string problemFileName = DelSpace(problem);
+            file.open(problemFileName, ios::in | ios::binary);
             if (!file.is_open()) {
-                cout << "Error in opening file" << T::class_name + key << "\n";
+                cout << "Error in opening file " << problem << "\n";
             } else {
-                file.read((char *) &obj, sizeof(obj));
+                file.read((char *) &solution, sizeof(solution));
                 file.close();
-                object = obj;
-                insert(key, obj);
+                object = solution;
+                insert(problem, solution);
             }
         }
         return object;
     }
 
-    void foreach(void (*func)(T &)) {
-        for (string str :_lru) {
-            func(_cache[str].first);
-        }
-    }
 
 };
 

@@ -8,7 +8,7 @@
 template<class P, class S>
 class CacheManager {
 public:
-    virtual S insert(P p) = 0;
+    virtual void insert(P p,S s) = 0;
 
     virtual S get(P p) = 0;
 };

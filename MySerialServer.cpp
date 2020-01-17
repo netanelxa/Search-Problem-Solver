@@ -7,21 +7,25 @@
 
 using namespace std;
 
+void timeout(double time, int sockfd) {
+    struct timeval tv;
+    tv.tv_sec = time;
+    setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof tv);
+}
+
 void StartServer(ClientHandler *c, int socketfd, sockaddr_in address) {
-   /* struct timeval tv;
-    tv.tv_sec = 1;
-    tv.tv_usec = 0;*/
     while (true) {
+        timeout(20, socketfd);
         int client_socket = accept(socketfd, (struct sockaddr *) &address, (socklen_t *) &address);
-     //   setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char *) &tv, sizeof(struct timeval));
-        cout << "Client accepted" << endl;
+        //   setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (char *) &tv, sizeof(struct timeval));
         if (client_socket == -1) {
-            std::cout << "Error accepting client" << std::endl;
-        } else if (errno == EWOULDBLOCK) {
             cout << "timeout!" << endl;
+            std::cout << "Error accepting client" << std::endl;
             break;
+        } else {
+            cout << "Client accepted" << endl;
+            c->handleClient(client_socket);
         }
-        c->handleClient(client_socket);
     }
 }
 
