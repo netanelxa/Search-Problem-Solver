@@ -7,9 +7,15 @@
 
 
 #include "Solver.h"
+#include "Searcher.h"
 
-class OA {
-
+template<class P, class S,class T>
+class OA : public Solver<P, S> {
+    Searcher<T> *searcher;
+public:
+    S solve(P){
+        searcher.
+    } ;
 };
 
 

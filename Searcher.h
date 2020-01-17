@@ -9,9 +9,9 @@
 #include "Solver.h"
 
 template<class T>
-class Searcher:public Searchable<T> {
+class Searcher {
 public:
-    virtual T Search(Searchable<T> src)=0;
+    virtual T Search(Searchable<T> src) = 0;
 };
 
 
