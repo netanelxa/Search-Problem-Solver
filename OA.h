@@ -8,13 +8,13 @@
 
 #include "Solver.h"
 #include "Searcher.h"
+#include "BestFS.h"
 
 template<class P, class S,class T>
 class OA : public Solver<P, S> {
     Searcher<T> *searcher;
 public:
-    S solve(P){
-    } ;
+    S solve(P);
 };
 
 
