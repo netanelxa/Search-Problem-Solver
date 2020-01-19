@@ -69,27 +69,43 @@ string MyClientHandler::MatrixBuild(string line) {
         if (line[i] == ',')
             cols++;
     }
-    double **matrix = new double *[rows];
+    string **matrix = new string *[rows + 2];
     for (int i = 0; i < rows; ++i)
-        matrix[i] = new double[cols];
+        matrix[i] = new string[cols + 2];
     int i = 0;
     int j = 0;
     int k = 0;
-    while (i <= cols) {
-        if (line[k] == ' ')
+    string temp = "";
+    while (i < cols) {
+        int flag = 0;
+        while (line[k] != ',') {
+            flag = 0;
+            if (line[k] == ' ')
+                k++;
+            temp += line[k];
             k++;
-        matrix[i][j] = strod(line[k]);
-        k++;
+            if (line[k] == '\n') {
+                flag = 1;
+                matrix[i][j] = temp;
+                j = 0;
+                i++;
+                break;
+            }
+        }
+        if (flag == 0)
+            matrix[i][j] = temp;
+        temp = "";
         if (line[k] == ',')
             j++;
-        if (line[k] == '\n') {
+        if (line[k] == '\n' && flag == 0) {
             j = 0;
             i++;
         }
+        k++;
     }
     cout << "From Here" << endl;
     for (int i = 0; i < cols; i++) {
-        for (int j = 0; j < rows; j++)
+        for (int j = 0; j < rows+1; j++)
             std::cout << matrix[i][j] << " ";
 
         std::cout << std::endl;
