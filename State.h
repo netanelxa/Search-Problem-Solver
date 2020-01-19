@@ -18,8 +18,7 @@ class State {
     bool visited = false;
     double heur;
 public:
-
-    State(double cost, T *state){
+        State(double cost, T *state){
         this->cost = cost;
         this->distance = cost;
         this->parent = nullptr;
