@@ -62,7 +62,7 @@ string MyClientHandler::MatrixBuild(string line) {
     x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
     y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
     startPoint = new Point(stoi(x), stoi(y));
-    line.erase(line.rfind('\n'), line.length() - line.rfind('\n') + 1);
+    line.erase(line.rfind('\n') + 1, line.length() - line.rfind('\n') + 1);
     size_t rows = std::count(line.begin(), line.end(), '\n');
     int cols = 0;
     for (int i = 0; i < line.find('\n'); i++) {
@@ -70,13 +70,13 @@ string MyClientHandler::MatrixBuild(string line) {
             cols++;
     }
     string **matrix = new string *[rows + 2];
-    for (int i = 0; i < rows; ++i)
+    for (int i = 0; i <= rows; ++i)
         matrix[i] = new string[cols + 2];
     int i = 0;
     int j = 0;
     int k = 0;
     string temp = "";
-    while (i < cols) {
+    while (i <= cols) {
         int flag = 0;
         while (line[k] != ',') {
             flag = 0;
@@ -94,20 +94,22 @@ string MyClientHandler::MatrixBuild(string line) {
         }
         if (flag == 0)
             matrix[i][j] = temp;
+
         temp = "";
         if (line[k] == ',')
             j++;
-        if (line[k] == '\n' && flag == 0) {
-            j = 0;
-            i++;
-        }
+        if (i == cols + 1 && j == 0)
+            break;
         k++;
     }
+    cout << matrix[36][36] << endl;
+    cout << matrix[35][36] << endl;
+    cout << matrix[36][35] << endl;
     cout << "From Here" << endl;
-    for (int i = 0; i < cols; i++) {
-        for (int j = 0; j < rows+1; j++)
+    for (int i = 0; i <= cols; i++) {
+        cout<<"this";
+        for (int j = 0; j <= rows ; j++)
             std::cout << matrix[i][j] << " ";
-
         std::cout << std::endl;
     }
 
