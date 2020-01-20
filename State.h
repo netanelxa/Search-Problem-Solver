@@ -25,6 +25,7 @@ public:
         this->state = state;
         this->heur = 0;
     }
+
     T* getState(){
         return this->state;
     }
@@ -71,6 +72,8 @@ public:
     void initDis(){
         this->distance =cost;
     }
+
+
 };
 
 

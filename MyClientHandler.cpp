@@ -33,7 +33,7 @@ void MyClientHandler::handleClient(int sockfd) {
             }
         }
         cout << line << endl;
-        MatrixBuild(line);
+        vector<State<Point> *> StateVector = matrixbuilder->build(line);
         if (cm->get(buffer) != "-1") {
             string n = cm->get(buffer);
             const char *nsend = n.c_str();
@@ -50,72 +50,6 @@ void MyClientHandler::handleClient(int sockfd) {
         }
     }
     std::cout << socknumber << std::endl;
-}
-
-
-string MyClientHandler::MatrixBuild(string line) {
-    line.erase(line.rfind(',') + 3, line.length() - line.rfind(',') + 3);
-    string x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
-    string y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
-    exitPoint = new Point(stoi(x), stoi(y));
-    line.erase(line.rfind('\n'), line.length() - line.rfind('\n') + 1);
-    x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
-    y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
-    startPoint = new Point(stoi(x), stoi(y));
-    line.erase(line.rfind('\n') + 1, line.length() - line.rfind('\n') + 1);
-    size_t rows = std::count(line.begin(), line.end(), '\n');
-    int cols = 0;
-    for (int i = 0; i < line.find('\n'); i++) {
-        if (line[i] == ',')
-            cols++;
-    }
-    string **matrix = new string *[rows + 2];
-    for (int i = 0; i <= rows; ++i)
-        matrix[i] = new string[cols + 2];
-    int i = 0;
-    int j = 0;
-    int k = 0;
-    string temp = "";
-    while (i <= cols) {
-        int flag = 0;
-        while (line[k] != ',') {
-            flag = 0;
-            if (line[k] == ' ')
-                k++;
-            temp += line[k];
-            k++;
-            if (line[k] == '\n') {
-                flag = 1;
-                matrix[i][j] = temp;
-                j = 0;
-                i++;
-                break;
-            }
-        }
-        if (flag == 0)
-            matrix[i][j] = temp;
-
-        temp = "";
-        if (line[k] == ',')
-            j++;
-        if (i == cols + 1 && j == 0)
-            break;
-        k++;
-    }
-    cout << matrix[36][36] << endl;
-    cout << matrix[35][36] << endl;
-    cout << matrix[36][35] << endl;
-    cout << "From Here" << endl;
-    for (int i = 0; i <= cols; i++) {
-        cout<<"this";
-        for (int j = 0; j <= rows ; j++)
-            std::cout << matrix[i][j] << " ";
-        std::cout << std::endl;
-    }
-
-    for (int i = 0; i < rows; ++i)
-        delete[] matrix[i];
-    delete[] matrix;
 }
 
 

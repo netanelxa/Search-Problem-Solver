@@ -15,6 +15,7 @@
 #include <sys/socket.h>
 #include "vector"
 #include "Point.h"
+#include "MatrixBuilder.h"
 
 using namespace std;
 
@@ -22,8 +23,7 @@ class MyClientHandler : public ClientHandler {
     int socknumber;
     OA<string, string, string> *searchsolver;
     FileCacheManager<string,string> *cm;
-    Point *startPoint;
-    Point *exitPoint;
+    MatrixBuilder *matrixbuilder;
 
 public:
     virtual void handleClient(int sockfd);
