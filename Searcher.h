@@ -7,12 +7,13 @@
 
 #include "Searchable.h"
 #include "Solver.h"
-
+#include "vector"
 template<class T>
 class Searcher {
 public:
-    virtual T Search(Searchable<T> src) = 0;
-};
+    //virtual T search(Searchable<T> src) = 0;
+    virtual vector<State<T>*> search(Searchable<T>* searchable)=0;
+    };
 
 
 #endif //EX4_SEARCHER_H

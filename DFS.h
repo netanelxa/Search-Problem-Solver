@@ -10,25 +10,28 @@
 #include "State.h"
 #include "vector"
 
-template <class T>
+template<class T>
 class DFS : public Searcher<T> {
 private:
     int evaluated;
     double pathCost;
 
 public:
-    DFS(){
-        evaluated =0;
+    DFS() {
+        evaluated = 0;
     }
-    vector<State<T>*> search(Searchable<T>* searchable) override {
+
+    virtual vector<State<T> *> search(Searchable<T> *searchable) {
+
         searchable->setCurrVisited();
-        vector<State<T>*> trace;
+        vector<State<T> *> trace;
         this->helpSearch(searchable, searchable->getInitialState(), trace);
         return trace;
     }
 
-    int helpSearch(Searchable<T>* searchable, State<T>* curr, vector<State<T>*> &trace) {
-        if(curr->equals(searchable->getGoalState())){
+    int helpSearch(Searchable<T> *searchable, State<T> *curr, vector<State<T> *> &trace) {
+       auto a=curr->getState();
+        if (searchable->isGoalState(curr)) {
             evaluated++;
             while (curr->getParent() != nullptr) {
                 trace.push_back(curr);
@@ -37,8 +40,8 @@ public:
             }
             pathCost += curr->getCost();
             trace.push_back(curr);
-            vector<State<T>*> back;
-            for (int i = trace.size() - 1; i >= 0 ; i--) {
+            vector<State<T> *> back;
+            for (int i = trace.size() - 1; i >= 0; i--) {
                 back.push_back(trace.at(i));
             }
             trace = back;
@@ -47,8 +50,8 @@ public:
         curr->setVisited();
         evaluated++;
         searchable->setCurr(curr);
-        list<State<T>*> succerssors = searchable->getAllPossibleStates(curr,'b');
-        for (State<T>* state : succerssors) {
+        list<State<T> *> succerssors = searchable->getAllPossibleStates(curr, 'b');
+        for (State<T> *state : succerssors) {
             bool visited = state->getVisited();
             if (!visited) {
                 state->setParent(curr);
@@ -59,7 +62,7 @@ public:
         }
     }
 
-    int getNumberOfNodesEvaluated() override {
+    int getNumberOfNodesEvaluated() {
         return evaluated;
     }
 
@@ -67,8 +70,6 @@ public:
         return pathCost;
     }
 };
-
-
 
 
 #endif //EX4_DFS_H

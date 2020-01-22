@@ -25,6 +25,7 @@ private:
     unordered_map<P, pair<S, list<string>::iterator>> _cache;
     list <string> _lru;
     fstream file;
+    hash<P>myHash;
 public:
     FileCacheManager() {
         this->capacity = 5;
@@ -52,7 +53,10 @@ public:
         _cache[problem] = {solution, _lru.begin()};
 
         //open file
-        file.open(problem + ".txt", ios::out);
+
+         int fileName=myHash(problem);
+        string hashProblemStr=to_string(fileName);
+        file.open(hashProblemStr + ".txt", ios::out);
         if (!file.is_open()) {
             cout << "Error in opening file\n";
         }
@@ -76,8 +80,9 @@ public:
         }
             //if the problem is not in the cache
         else {
-            auto problemFileName = problem;
-            file.open(problemFileName + ".txt", ios::in | ios::binary);
+            int fileName=myHash(problem);
+            string hashProblemStr=to_string(fileName);
+            file.open(hashProblemStr + ".txt", ios::in | ios::binary);
             if (!file.is_open()) {
                 cout << "there is no existing solution from the problem " << "\n";
                 return "-1";

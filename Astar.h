@@ -11,7 +11,6 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include "State.h"
 
 //class T;
 using namespace std;
@@ -52,7 +51,7 @@ public:
         return temp;
     }
 
-    vector<State<T> *> search(Searchable<T> *searchable) override {
+    virtual vector<State<T> *> search(Searchable<T> *searchable) {
 
         priority_queue<State<T> *, vector<State<T> *>, Cmp> openList;
         openList.push(searchable->getInitialState());
@@ -60,14 +59,16 @@ public:
         vector<State<T> *> path;
         while (!openList.empty()) {
             State<T> *n = openList.top();
-
             // Remove this vertex from the open list
             openList.pop();
             evaluated++;
             // Add this vertex to the closed list
             n->setVisited();
             closed.insert(n);
-            if (n->equals(searchable->getGoalState())) {
+            int s=n->getCost();
+            auto a=n->getState();
+            auto b= searchable->getGoalState();
+            if (searchable->isGoalState(n)) {
                 //evaluated++;
                 path.push_back(n);
                 while (!n->equals(searchable->getInitialState())) {
@@ -77,8 +78,10 @@ public:
                 }
                 pathCost += n->getCost();
                 vector<State<T> *> back;
-                for (unsigned long  i = path.size() - 1; i >= 0; i--) {
+                unsigned int i=(path.size()-1);
+                while(i<-1){
                     back.push_back(path.at(i));
+                    i--;
                 }
                 return back;
             }
@@ -100,20 +103,6 @@ public:
         }
 
     }
-
-
-
-    int getNumberOfNodesEvaluated()
-    override{
-        return evaluated;
-    }
-
-    double getPathCost()
-    override{
-        return pathCost;
-    }
-
-
 };
 
 

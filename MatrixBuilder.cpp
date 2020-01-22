@@ -4,8 +4,14 @@
 
 #include "MatrixBuilder.h"
 
-vector<State<Point>*> MatrixBuilder::build(string line) {
-    line.erase(line.rfind(',') + 3, line.length() - line.rfind(',') + 3);
+MatrixBuilder::MatrixBuilder(size_t rows, int cols) {
+    this->rows = rows;
+    this->cols = cols;
+}
+
+
+State<Point> ***MatrixBuilder::build(string line) {
+    line.erase(line.rfind('e')-1 , line.length() - line.rfind('e')+1);
     string x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
     string y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
     Point *exitPoint = new Point(stoi(x), stoi(y));
@@ -13,16 +19,11 @@ vector<State<Point>*> MatrixBuilder::build(string line) {
     x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
     y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
     Point *startPoint = new Point(stoi(x), stoi(y));
+
     line.erase(line.rfind('\n') + 1, line.length() - line.rfind('\n') + 1);
-    size_t rows = std::count(line.begin(), line.end(), '\n');
-    int cols = 0;
-    for (int i = 0; i < line.find('\n'); i++) {
-        if (line[i] == ',')
-            cols++;
-    }
-    string **matrix = new string *[rows + 2];
+    State<Point> ***matrix = new State<Point> **[rows + 2];
     for (int i = 0; i <= rows; ++i)
-        matrix[i] = new string[cols + 2];
+        matrix[i] = new State<Point> *[cols + 2];
     int i = 0;
     int j = 0;
     int k = 0;
@@ -37,15 +38,17 @@ vector<State<Point>*> MatrixBuilder::build(string line) {
             k++;
             if (line[k] == '\n') {
                 flag = 1;
-                matrix[i][j] = temp;
+                auto *p = new Point(i, j);
+                matrix[i][j] = new State<Point>(stod(temp), p);
                 j = 0;
                 i++;
                 break;
             }
         }
-        if (flag == 0)
-            matrix[i][j] = temp;
-
+        if (flag == 0) {
+            auto *p = new Point(i, j);
+            matrix[i][j] = new State<Point>(stod(temp), p);
+        }
         temp = "";
         if (line[k] == ',')
             j++;
@@ -53,20 +56,145 @@ vector<State<Point>*> MatrixBuilder::build(string line) {
             break;
         k++;
     }
-    vector<State<Point>*> StateVec;
+    double startCost = matrix[startPoint->getX()][startPoint->getY()]->getCost();
+    this->setInitalState(new State<Point>(startCost, startPoint));
+    double endCost=matrix[exitPoint->getX()][exitPoint->getY()]->getCost();
+    this->setGoalState(new State<Point>(endCost,exitPoint));
+
+    /*
+    vector<State<Point> *> StateVec;
     cout << "From Here" << endl;
     for (int i = 0; i <= cols; i++) {
         for (int j = 0; j < rows; j++) {
-            auto *p=new Point(i,j);
-            State<Point> *x = new State<Point>(stod(matrix[i][j]),p);
+            auto *p = new Point(i, j);
+            State<Point> *x = new State<Point>(stod(matrix[i][j]), p);
             StateVec.push_back(x);
             std::cout << matrix[i][j] << " ";
         }
         std::cout << std::endl;
     }
 
-    for (int i = 0; i < rows; ++i)
-        delete[] matrix[i];
-    delete[] matrix;
-    return StateVec;
+    */
+    this->current = matrix[0][0];
+    this->matrix=matrix;
+    return matrix;
+}
+
+
+void MatrixBuilder::setGoalState(State<Point> *endPoint) {
+    this->goalState = endPoint;
+}
+
+void MatrixBuilder::setInitalState(State<Point> *startPoint) {
+    this->initialState = startPoint;
+}
+
+State<Point> *MatrixBuilder::getInitialState() {
+    return this->initialState;
+}
+
+bool MatrixBuilder::isGoalState(State<Point> *state) {
+    if ((state->getState()->getX() == this->goalState->getState()->getX()) &&
+        (state->getState()->getY() == this->goalState->getState()->getX()))
+        return true;
+    return false;
+}
+
+
+list<State<Point> *> MatrixBuilder::getAllPossibleStates(State<Point> *s, char type) {
+    list<State<Point> *> adj;
+    int x = s->getState()->getX();
+    int y = s->getState()->getY();
+    State<Point> *left = nullptr;
+    State<Point> *right = nullptr;
+    State<Point> *up = nullptr;
+    State<Point> *down = nullptr;
+    if (y - 1 >= 0 && matrix[x][y - 1]->getCost() >= 0) {
+        left = matrix[x][y - 1];
+    }
+    if (y + 1 <= cols && matrix[x][y + 1]->getCost() >= 0) {
+        right = matrix[x][y + 1];
+    }
+    if (x - 1 >= 0 && matrix[x - 1][y]->getCost() >= 0) {
+        up = matrix[x - 1][y];
+    }
+    if (x + 1 <= rows && matrix[x + 1][y]->getCost() >= 0) {
+        down = matrix[x + 1][y];
+    }
+    if (right != nullptr) {
+        adj.push_back(right);
+    }
+    if (down != nullptr) {
+        adj.push_back(down);
+    }
+    if (left != nullptr) {
+        adj.push_back(left);
+    }
+    if (up != nullptr) {
+        adj.push_back(up);
+    }
+    /*} else {
+        if (down != nullptr) {
+            adj.push_back(down);
+        }
+        if (right != nullptr) {
+            adj.push_back(right);
+        }
+        if (left != nullptr) {
+            adj.push_back(left);
+        }
+        if (up != nullptr) {
+            adj.push_back(up);
+        }
+    }*/
+
+    return adj;
+}
+
+
+void MatrixBuilder::setCurr(State<Point> *curr) {
+    this->current = curr;
+}
+
+double MatrixBuilder::calculateHValue(State<Point> *cur) {
+    int xCur = cur->getState()->getX();
+    int yCur = cur->getState()->getY();
+    int xGoal = this->getGoalState()->getState()->getX();
+    int yGoal = this->getGoalState()->getState()->getY();
+    double disMan = abs(xCur - xGoal) +
+                    abs(yCur - yGoal);
+    double total = disMan + cur->getCost() + cur->getParent()->getDistance();
+    //cur->setHeur(total);
+    return total;
+
+}
+
+
+void MatrixBuilder::initDis() {
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            matrix[i][j]->initDis();
+        }
+
+    }
+}
+
+State<Point>* MatrixBuilder::getGoalState() {
+    return this->goalState;
+}
+
+
+vector<vector<string>> MatrixBuilder::toString() {
+    vector<vector<string>> all;
+    vector<string> eachRow;
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            string x = to_string(int(matrix[i][j]->getCost()));
+            eachRow.emplace_back(x);
+        }
+        all.emplace_back(eachRow);
+        eachRow.clear();
+    }
+    return all;
+
 }

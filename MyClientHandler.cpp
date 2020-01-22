@@ -8,11 +8,16 @@
 
 void MyClientHandler::handleClient(int sockfd) {
     this->socknumber = sockfd;
+    Searcher<Point>* DFSsearcher=new DFS<Point>();
+    Searcher<Point>* ASsercher=new AStar<Point>();
+    Searcher<Point>* BFSsearcher=new BFS<Point>();
+
+
     char buffer[1024] = {0};
     string line;
     string temp_buffer;
     vector<string> matrix_vec;
-    // searchsolver = new OA<string, string, string>;
+    searchsolver = new OA<string,string>(ASsercher);
     cm = new FileCacheManager<string, string>();
     while (true) {
         memset(buffer, 0, bufferlength);
@@ -33,16 +38,15 @@ void MyClientHandler::handleClient(int sockfd) {
             }
         }
         cout << line << endl;
-        vector<State<Point> *> StateVector = matrixbuilder->build(line);
-        if (cm->get(buffer) != "-1") {
-            string n = cm->get(buffer);
+        if (cm->get(line) != "-1") {
+            string n = cm->get(line);
             const char *nsend = n.c_str();
             send(this->socknumber, nsend, strlen(nsend), 0);
         } else {
             cout << buffer << endl;
-            //       string answer = searchsolver->solve(buffer);
-            //    cm->insert(buffer, answer);
-            string n = cm->get(buffer);
+            string answer = searchsolver->solve(line);
+            cm->insert(line, answer);
+            string n = cm->get(line);
             const char *nsend = n.c_str();
             send(this->socknumber, nsend, strlen(nsend), 0);
             // cout << cm->get(buffer) << endl;

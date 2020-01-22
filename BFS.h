@@ -1,44 +1,65 @@
 //
-// Created by USER on 18/01/2020.
+// Created by netanel on 21/01/2020.
 //
 
-#ifndef UNTITLED6_BFS_H
-#define UNTITLED6_BFS_H
+#ifndef EX4_BFS_H
+#define EX4_BFS_H
 
-#include "Search.h"
-#include <string>
-#include "string"
 #include <vector>
-#include <bits/stdc++.h>
-using namespace std;
+#include <unordered_set>
+#include "Searcher.h"
 
-class BFS: public Search {
+template<class T>
+class BFS : public Searcher<T> {
+private:
+    int evaluated;
+    double pathCost;
 
-public: BFS();
-    struct Point
-    {
-        int x;
-        int y;
-    };
+public:
+    BFS<T>() {
+        evaluated = 0;
+        pathCost = 0;
+    }
 
-// A Data Structure for queue used in BFS
-    struct queueNode
-    {
-        Point pt; // The cordinates of a cell
-        int dist; // cell's distance of from the source
-        string direction;
-        string weight;
-    };
-
-    bool isValid(int row, int col);
-    string classifyDirection(int i);
-    void print_vectors(vector<string> splitedDirec, vector<string> splitedWeight);
-    vector<string> split_sentence(string str,vector<string> splitedVec);
-    int bfs(int mat[][], Point src, Point dest);
-
-
+    virtual vector<State<T> *> search(Searchable<T> *searchable) {
+        list<State<T> *> openList;
+        openList.push_back(searchable->getInitialState());
+        evaluated++;
+            searchable->setCurrVisited();
+        vector<State<T> *> trace;
+        while (openList.size() > 0) {
+            State<T> *n = openList.front();
+            openList.pop_front();
+            if (searchable->isGoalState(n)) {
+                evaluated++;
+                while (n->getParent() != nullptr) {
+                    trace.push_back(n);
+                    pathCost += n->getCost();
+                    n = n->getParent();
+                }
+                pathCost += n->getCost();
+                trace.push_back(n);
+                vector<State<T> *> back;
+                for (int i = trace.size() - 1; i >= 0; i--) {
+                    back.push_back(trace.at(i));
+                }
+                return back;
+            }
+            list<State<T> *> succerssors = searchable->getAllPossibleStates(n, 'b');
+            for (State<T> *state : succerssors) {
+                bool visited = state->getVisited();
+                if (!visited) {
+                    state->setVisited();
+                    state->setParent(n);
+                    openList.push_back(state);
+                    evaluated++;
+                    searchable->setCurr(state);
+                }
+            }
+        }
+        //return nullptr;
+    }
 
 };
 
-
-#endif //UNTITLED6_BFS_H
+#endif //EX4_BFS_H

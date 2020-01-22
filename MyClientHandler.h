@@ -21,13 +21,14 @@ using namespace std;
 
 class MyClientHandler : public ClientHandler {
     int socknumber;
-    OA<string, string, string> *searchsolver;
-    FileCacheManager<string,string> *cm;
-    MatrixBuilder *matrixbuilder;
+    Solver<string,string>* searchsolver;
+    FileCacheManager<string, string> *cm;
 
 public:
     virtual void handleClient(int sockfd);
+
     bool isEnd(string buffer);
+
     string MatrixBuild(string line);
 
 };
