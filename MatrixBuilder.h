@@ -30,6 +30,7 @@ public:
     virtual bool isGoalState(State<Point> *state);
 
     void setInitalState(State<Point> *startPoint);
+
     void setGoalState(State<Point> *endPoint);
 
     void setGoalState(Point *endPoint);
@@ -47,6 +48,10 @@ public:
     vector<vector<string>> toString();
 
     virtual State<Point> *getGoalState();
+
+    int getSize() {
+        return this->cols;
+    }
 
     virtual ~MatrixBuilder() {
         for (int i = 0; i < rows; ++i)

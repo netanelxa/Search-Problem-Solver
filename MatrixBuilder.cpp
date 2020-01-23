@@ -28,6 +28,8 @@ State<Point> ***MatrixBuilder::build(string line) {
     int j = 0;
     int k = 0;
     string temp = "";
+    mutex g_i_mutex;
+    g_i_mutex.lock();
     while (i <= cols) {
         int flag = 0;
         while (line[k] != ',') {
@@ -77,6 +79,8 @@ State<Point> ***MatrixBuilder::build(string line) {
     */
     this->current = matrix[0][0];
     this->matrix=matrix;
+    g_i_mutex.unlock();
+
     return matrix;
 }
 

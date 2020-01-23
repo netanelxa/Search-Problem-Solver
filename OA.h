@@ -14,9 +14,10 @@
 #include "Astar.h"
 #include "Point.h"
 #include "MatrixBuilder.h"
+#include "GraphFile.h"
 
 template<class P, class S>
-class OA : public Solver<P,S> {
+class OA : public Solver<P, S> {
     Searcher<Point> *searcher;
 
 public:
@@ -24,8 +25,8 @@ public:
         this->searcher = searcher1;
     }
 
-    virtual S solve(P line)  {
-        size_t rows = std::count(line.begin(), line.end(), '\n')-4;
+    virtual S solve(P line) {
+        size_t rows = std::count(line.begin(), line.end(), '\n') - 4;
         int cols = 0;
         for (int i = 0; i < line.find('\n'); i++) {
             if (line[i] == ',')
@@ -43,27 +44,28 @@ public:
         }
         vector<State<Point> *> solution = searcher->search(searchable);
         string final = "";
-        int sumOfCost=0;
+        int sumOfCost = solution.at(0)->getCost();
+        int solSize = solution.size();
         for (unsigned long i = 0; i < solution.size() - 1; i++) {
             int x1 = solution.at(i)->getState()->getX();
             int y1 = solution.at(i)->getState()->getY();
             int x2 = solution.at(i + 1)->getState()->getX();
             int y2 = solution.at(i + 1)->getState()->getY();
-            sumOfCost+=solution.at(i)->getCost();
+            sumOfCost += solution.at(i + 1)->getCost();
             if (y1 < y2) {
-                final += "Right ("+to_string(sumOfCost)+"), ";
+                final += "Right (" + to_string(sumOfCost) + "), ";
                 continue;
             }
             if (y1 > y2) {
-                final += "Left ("+to_string(sumOfCost)+"), ";
+                final += "Left (" + to_string(sumOfCost) + "), ";
                 continue;
             }
             if (x1 < x2) {
-                final += "Down ("+to_string(sumOfCost)+"), ";
+                final += "Down (" + to_string(sumOfCost) + "), ";
                 continue;
             }
             if (x1 > x2) {
-                final += "Up ("+to_string(sumOfCost)+"), ";
+                final += "Up (" + to_string(sumOfCost) + "), ";
                 continue;
             }
         }
@@ -77,7 +79,6 @@ public:
         delete searcher;
     }
 };
-
 
 
 #endif //EX4_OA_H

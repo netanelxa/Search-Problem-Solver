@@ -8,17 +8,18 @@
 
 void MyClientHandler::handleClient(int sockfd) {
     this->socknumber = sockfd;
-    Searcher<Point>* DFSsearcher=new DFS<Point>();
-    Searcher<Point>* ASsercher=new AStar<Point>();
-    Searcher<Point>* BFSsearcher=new BFS<Point>();
-
-
+    Searcher<Point> *DFSsearcher = new DFS<Point>();
+    Searcher<Point> *ASsercher = new AStar<Point>();
+    Searcher<Point> *BFSsearcher = new BFS<Point>();
+    Searcher<Point> *BestFSsearcher = new BestFS<Point>();
     char buffer[1024] = {0};
     string line;
     string temp_buffer;
     vector<string> matrix_vec;
-    searchsolver = new OA<string,string>(ASsercher);
+    searchsolver = new OA<string, string>(BestFSsearcher);
     cm = new FileCacheManager<string, string>();
+    mutex g_i_mutex;
+    g_i_mutex.lock();
     while (true) {
         memset(buffer, 0, bufferlength);
         int i = 0;
@@ -50,7 +51,7 @@ void MyClientHandler::handleClient(int sockfd) {
             const char *nsend = n.c_str();
             send(this->socknumber, nsend, strlen(nsend), 0);
             // cout << cm->get(buffer) << endl;
-
+            g_i_mutex.unlock();
         }
     }
     std::cout << socknumber << std::endl;
