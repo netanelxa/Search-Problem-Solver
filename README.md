@@ -33,7 +33,7 @@ implements ClientHandler. Checks if the problem has already been solved via File
         g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread
    and then:
        
-       ./a.out ex4.txt
+       ./a.out main.cpp
 
 
 ## More
