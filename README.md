@@ -16,14 +16,14 @@ experiment-BFS, Best First Search, DFS, A* Search. The results were compared and
 problems solving.
 
 ## main classes
-- MySerialServer\
+- **MySerialServer**\
 implements Server and handles one client.
-- MyParallelServer\
+- **MyParallelServer**\
 implements Server and handles multiple clients.
-- MyClientHandler\
+- **MyClientHandler**\
 implements ClientHandler. Checks if the problem has already been solved via FileCacheManager, 
  creates a Searcher object that solves the problem using search algorithm. 
-- BFS, BestFS, DFS, Astar\
+- **BFS, BestFS, DFS, Astar**\
 4 search algorithms that has been tested.
 
 
