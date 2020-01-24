@@ -33,7 +33,10 @@ public:
                 cols++;
         }
         auto *matrixbuilder = new MatrixBuilder(rows, cols);
+        mutex g_i_mutex;
+        g_i_mutex.lock();
         State<Point> ***StateVector = matrixbuilder->build(line);
+        g_i_mutex.unlock();
         Searchable<Point> *searchable = matrixbuilder;
         cout << "From Here" << endl;
         for (int i = 0; i <= cols; i++) {

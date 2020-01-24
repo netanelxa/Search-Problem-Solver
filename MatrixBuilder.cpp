@@ -11,13 +11,17 @@ MatrixBuilder::MatrixBuilder(size_t rows, int cols) {
 
 
 State<Point> ***MatrixBuilder::build(string line) {
-    line.erase(line.rfind('e')-1 , line.length() - line.rfind('e')+1);
-    string x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
-    string y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
+    mutex g_i_mutex;
+    g_i_mutex.lock();
+    line.erase(line.rfind('e'), line.length() - line.rfind('e'));
+    string x = line.substr(line.rfind(',') + 1, line.rfind('\n') - line.rfind(',') - 1);
+    line.erase(line.rfind(',') + 1, line.length() - line.rfind(',') + 1);
+    string y = line.substr(line.rfind('\n') + 1, line.length() - line.rfind('\n') - 2);
     Point *exitPoint = new Point(stoi(x), stoi(y));
-    line.erase(line.rfind('\n'), line.length() - line.rfind('\n') + 1);
-    x = line.substr(line.rfind('\n') + 1, line.rfind(',') - line.rfind('\n') - 1);
-    y = line.substr(line.rfind(',') + 1, line.length() - line.rfind(','));
+    line.erase(line.rfind('\n'), line.length() - line.rfind('\n'));
+     x = line.substr(line.rfind(',') + 1, line.rfind('\n') - line.rfind(',') - 1);
+    line.erase(line.rfind(',') + 1, line.length() - line.rfind(',') + 1);
+     y = line.substr(line.rfind('\n') + 1, line.length() - line.rfind('\n') - 2);
     Point *startPoint = new Point(stoi(x), stoi(y));
 
     line.erase(line.rfind('\n') + 1, line.length() - line.rfind('\n') + 1);
@@ -28,8 +32,7 @@ State<Point> ***MatrixBuilder::build(string line) {
     int j = 0;
     int k = 0;
     string temp = "";
-    mutex g_i_mutex;
-    g_i_mutex.lock();
+
     while (i <= cols) {
         int flag = 0;
         while (line[k] != ',') {
@@ -60,8 +63,8 @@ State<Point> ***MatrixBuilder::build(string line) {
     }
     double startCost = matrix[startPoint->getX()][startPoint->getY()]->getCost();
     this->setInitalState(new State<Point>(startCost, startPoint));
-    double endCost=matrix[exitPoint->getX()][exitPoint->getY()]->getCost();
-    this->setGoalState(new State<Point>(endCost,exitPoint));
+    double endCost = matrix[exitPoint->getX()][exitPoint->getY()]->getCost();
+    this->setGoalState(new State<Point>(endCost, exitPoint));
 
     /*
     vector<State<Point> *> StateVec;
@@ -78,7 +81,7 @@ State<Point> ***MatrixBuilder::build(string line) {
 
     */
     this->current = matrix[0][0];
-    this->matrix=matrix;
+    this->matrix = matrix;
     g_i_mutex.unlock();
 
     return matrix;
@@ -183,7 +186,7 @@ void MatrixBuilder::initDis() {
     }
 }
 
-State<Point>* MatrixBuilder::getGoalState() {
+State<Point> *MatrixBuilder::getGoalState() {
     return this->goalState;
 }
 

@@ -26,6 +26,8 @@ class MyClientHandler : public ClientHandler {
 
 public:
     virtual void handleClient(int sockfd);
+    string getData(int sock_id);
+    string getLineFromSocket(int sock_id);
 
     bool isEnd(string buffer);
 
