@@ -48,7 +48,7 @@ public:
             return 1;
         }
         curr->setVisited();
-        evaluated++;
+        evaluated=evaluated+1;
         searchable->setCurr(curr);
         list<State<T> *> succerssors = searchable->getAllPossibleStates(curr, 'b');
         for (State<T> *state : succerssors) {
