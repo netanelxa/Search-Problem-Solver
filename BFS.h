@@ -7,8 +7,9 @@
 
 #include <vector>
 #include <unordered_set>
+#include <iostream>
 #include "Searcher.h"
-
+using namespace std;
 template<class T>
 class BFS : public Searcher<T> {
 private:
@@ -54,12 +55,12 @@ public:
                     openList.push_back(state);
                     evaluated++;
                     searchable->setCurr(state);
+                    //cout<<"test"<<;
                 }
             }
         }
         //return nullptr;
     }
-
 };
 
 #endif //EX4_BFS_H
