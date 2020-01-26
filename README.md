@@ -32,7 +32,7 @@ implements ClientHandler. Checks if the problem has already been solved via File
   1. insert as argument a port number.
   2. in terminal, run the command:
      
-        g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread
+          g++ -std=c++14 *.cpp -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -o a.out -pthread
    and then:
        
        ./a.out main.cpp
