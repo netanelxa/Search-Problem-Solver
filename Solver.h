@@ -12,7 +12,6 @@ class Solver {
 public:
 
     virtual S solve(P) = 0;
-
     virtual ~Solver() {};
 };
 

@@ -5,6 +5,7 @@
 
 #define bufferlength 1024
 
+
 string MyClientHandler::getData(int sock_id) {
     string curr_line;
     string problem;
@@ -42,30 +43,28 @@ void MyClientHandler::handleClient(int sockfd) {
     string line;
     string temp_buffer;
     vector<string> matrix_vec;
+    mutex locker1;
+    //locker1.lock();
     searchsolver = new OA<string, string>(BestFSsearcher);
-    cm = new FileCacheManager<string, string>();
-    mutex g_i_mutex;
-    g_i_mutex.lock();
+    cm = new FileCacheManager<string,string>();
     line = getData(this->socknumber);
-    g_i_mutex.unlock();
-    cout << line << endl;
-    if (cm->get(line) != "-1") {
-        g_i_mutex.lock();
+    //locker1.unlock();
+    //cout << line << endl;
+  //  locker1.lock();
+    if (cm->get(line)!="-1") {
         string n = cm->get(line);
-        g_i_mutex.unlock();
         const char *nsend = n.c_str();
         send(this->socknumber, nsend, strlen(nsend), 0);
+        cout<<"sent get:"<<nsend<<endl;
+        //locker1.unlock();
     } else {
-        cout << buffer << endl;
-        g_i_mutex.lock();
         string answer = searchsolver->solve(line);
         cm->insert(line, answer);
         string n = cm->get(line);
-        g_i_mutex.unlock();
-
         const char *nsend = n.c_str();
         send(this->socknumber, nsend, strlen(nsend), 0);
-        // cout << cm->get(buffer) << endl;
+        cout<<"sent: "<<nsend<<endl;
+       // locker1.unlock();
     }
 
 }

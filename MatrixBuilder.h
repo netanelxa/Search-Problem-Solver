@@ -12,7 +12,7 @@
 #include "vector"
 #include "Searchable.h"
 #include <iostream>
-
+#include <mutex>
 using namespace std;
 
 class MatrixBuilder : public Searchable<Point> {
@@ -21,6 +21,7 @@ class MatrixBuilder : public Searchable<Point> {
     size_t rows;
     State<Point> *initialState;
     State<Point> *goalState;
+    mutex locker;
 
 public:
     MatrixBuilder(size_t rows, int cols);

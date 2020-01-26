@@ -9,6 +9,7 @@
 #include <zconf.h>
 #include "MyParallelServer.h"
 #include "ClientHandler.h"
+#include "MyClientHandler.h"
 
 MyParallelServer::MyParallelServer() {}
 
@@ -74,5 +75,6 @@ void MyParallelServer::stop(int sockfd) {
 }
 
 void MyParallelServer::clientHandlerObjectFunctionAdapter(ClientHandler *ch, int sockfd) {
+    ch=new MyClientHandler();
     ch->handleClient(sockfd);
 }

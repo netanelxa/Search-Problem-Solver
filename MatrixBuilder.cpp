@@ -3,7 +3,7 @@
 //
 
 #include "MatrixBuilder.h"
-
+#include <mutex>
 MatrixBuilder::MatrixBuilder(size_t rows, int cols) {
     this->rows = rows;
     this->cols = cols;
@@ -11,19 +11,17 @@ MatrixBuilder::MatrixBuilder(size_t rows, int cols) {
 
 
 State<Point> ***MatrixBuilder::build(string line) {
-    mutex g_i_mutex;
-    g_i_mutex.lock();
-    line.erase(line.rfind('e'), line.length() - line.rfind('e'));
+
+     line.erase(line.rfind('e'), line.length() - line.rfind('e'));
     string x = line.substr(line.rfind(',') + 1, line.rfind('\n') - line.rfind(',') - 1);
     line.erase(line.rfind(',') + 1, line.length() - line.rfind(',') + 1);
     string y = line.substr(line.rfind('\n') + 1, line.length() - line.rfind('\n') - 2);
     Point *exitPoint = new Point(stoi(x), stoi(y));
     line.erase(line.rfind('\n'), line.length() - line.rfind('\n'));
-     x = line.substr(line.rfind(',') + 1, line.rfind('\n') - line.rfind(',') - 1);
+    x = line.substr(line.rfind(',') + 1, line.rfind('\n') - line.rfind(',') - 1);
     line.erase(line.rfind(',') + 1, line.length() - line.rfind(',') + 1);
-     y = line.substr(line.rfind('\n') + 1, line.length() - line.rfind('\n') - 2);
+    y = line.substr(line.rfind('\n') + 1, line.length() - line.rfind('\n') - 2);
     Point *startPoint = new Point(stoi(x), stoi(y));
-
     line.erase(line.rfind('\n') + 1, line.length() - line.rfind('\n') + 1);
     State<Point> ***matrix = new State<Point> **[rows + 2];
     for (int i = 0; i <= rows; ++i)
@@ -32,7 +30,6 @@ State<Point> ***MatrixBuilder::build(string line) {
     int j = 0;
     int k = 0;
     string temp = "";
-
     while (i <= cols) {
         int flag = 0;
         while (line[k] != ',') {
@@ -41,7 +38,7 @@ State<Point> ***MatrixBuilder::build(string line) {
                 k++;
             temp += line[k];
             k++;
-            if (line[k] == '\n') {
+            if (line[k] == '\n' && temp.length() > 0) {
                 flag = 1;
                 auto *p = new Point(i, j);
                 matrix[i][j] = new State<Point>(stod(temp), p);
@@ -50,7 +47,7 @@ State<Point> ***MatrixBuilder::build(string line) {
                 break;
             }
         }
-        if (flag == 0) {
+        if (flag == 0 && temp.length() > 0) {
             auto *p = new Point(i, j);
             matrix[i][j] = new State<Point>(stod(temp), p);
         }
@@ -58,32 +55,15 @@ State<Point> ***MatrixBuilder::build(string line) {
         if (line[k] == ',')
             j++;
         if (i == cols + 1 && j == 0)
-            break;
+        break;
         k++;
     }
     double startCost = matrix[startPoint->getX()][startPoint->getY()]->getCost();
     this->setInitalState(new State<Point>(startCost, startPoint));
     double endCost = matrix[exitPoint->getX()][exitPoint->getY()]->getCost();
     this->setGoalState(new State<Point>(endCost, exitPoint));
-
-    /*
-    vector<State<Point> *> StateVec;
-    cout << "From Here" << endl;
-    for (int i = 0; i <= cols; i++) {
-        for (int j = 0; j < rows; j++) {
-            auto *p = new Point(i, j);
-            State<Point> *x = new State<Point>(stod(matrix[i][j]), p);
-            StateVec.push_back(x);
-            std::cout << matrix[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    */
     this->current = matrix[0][0];
     this->matrix = matrix;
-    g_i_mutex.unlock();
-
     return matrix;
 }
 

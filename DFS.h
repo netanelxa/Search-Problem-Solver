@@ -62,13 +62,6 @@ public:
         }
     }
 
-    int getNumberOfNodesEvaluated() {
-        return evaluated;
-    }
-
-    double getPathCost() {
-        return pathCost;
-    }
 };
 
 

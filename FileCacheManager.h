@@ -23,9 +23,9 @@ class FileCacheManager : public CacheManager<P, S> {
 private:
     int capacity;
     unordered_map<P, pair<S, list<string>::iterator>> _cache;
-    list <string> _lru;
+    list<string> _lru;
     fstream file;
-    hash<P>myHash;
+    hash<P> myHash;
 public:
     FileCacheManager() {
         this->capacity = 5;
@@ -33,8 +33,7 @@ public:
 
 
     void insert(P problem, S solution) {
-        mutex g_i_mutex;
-        g_i_mutex.lock();
+
         auto keyLocation = _cache.find(problem);
         // exist in cache
         if (keyLocation != _cache.end()) {
@@ -52,26 +51,36 @@ public:
         _lru.push_front(problem);
         _cache[problem] = {solution, _lru.begin()};
 
-        //open file
+//        int x=locker.try_lock();
+//        if(x==-1){
+//            cout<<"didnt lock1"<<endl;
+//        }
+        SaveIntoFile(problem, solution);
 
-         int fileName=myHash(problem);
-        string hashProblemStr=to_string(fileName);
+    }
+
+    void SaveIntoFile(P problem, S solution) {
+        //open file
+        int fileName = myHash(problem);
+        string hashProblemStr = to_string(fileName);
         file.open(hashProblemStr + ".txt", ios::out);
         if (!file.is_open()) {
             cout << "Error in opening file\n";
         }
+
         //write to the file
         file << solution;
         file.close();
-        g_i_mutex.unlock();
-
     }
 
+
     S get(P problem) {
-        mutex g_i_mutex;
-        g_i_mutex.lock();
         S object;
         S solution;
+//        int x=locker.try_lock();
+//        if(x==-1){
+//            cout<<"didnt lock"<<endl;
+//        }
         auto keyLocation2 = _cache.find(problem);
         //if the problem is  in the cache
         if (keyLocation2 != _cache.end()) {
@@ -80,20 +89,20 @@ public:
         }
             //if the problem is not in the cache
         else {
-            int fileName=myHash(problem);
-            string hashProblemStr=to_string(fileName);
-            file.open(hashProblemStr + ".txt", ios::in | ios::binary);
+            int fileName = myHash(problem);
+            string hashProblemStr = to_string(fileName);
+            file.open(hashProblemStr + ".txt", ios::in);
             if (!file.is_open()) {
-                cout << "there is no existing solution from the problem " << "\n";
+                //locker.unlock();
                 return "-1";
             } else {
-                getline(file,object);
+                getline(file, object);
                 //file.read((char *) &object, sizeof(object));
                 file.close();
                 solution = object;
             }
         }
-        g_i_mutex.unlock();
+
         return solution;
     }
 };

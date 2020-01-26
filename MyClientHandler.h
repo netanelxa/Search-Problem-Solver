@@ -22,7 +22,8 @@ using namespace std;
 class MyClientHandler : public ClientHandler {
     int socknumber;
     Solver<string,string>* searchsolver;
-    FileCacheManager<string, string> *cm;
+    FileCacheManager<string,string> *cm;
+    mutex fileLock;
 
 public:
     virtual void handleClient(int sockfd);

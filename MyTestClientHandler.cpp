@@ -17,7 +17,7 @@ void MyTestClientHandler::handleClient(int sockfd) {
     this->socknumber = sockfd;
     char buffer[1024] = {0};
     stringsolver = new StringReverser();
-    cm = new FileCacheManager<string, string>();
+    cm = new FileCacheManager<string,string>();
     while (buffer != "end") {
         read(socknumber, buffer, 1024);
         if (cm->get(buffer) != "-1") {

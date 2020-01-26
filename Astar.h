@@ -52,7 +52,6 @@ public:
     }
 
     virtual vector<State<T> *> search(Searchable<T> *searchable) {
-
         priority_queue<State<T> *, vector<State<T> *>, Cmp> openList;
         openList.push(searchable->getInitialState());
         unordered_set<State<T> *> closed;

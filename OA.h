@@ -15,6 +15,7 @@
 #include "Point.h"
 #include "MatrixBuilder.h"
 #include "GraphFile.h"
+#include <mutex>
 
 template<class P, class S>
 class OA : public Solver<P, S> {
@@ -24,6 +25,7 @@ public:
     OA(Searcher<Point> *searcher1) {
         this->searcher = searcher1;
     }
+
 
     virtual S solve(P line) {
         size_t rows = std::count(line.begin(), line.end(), '\n') - 4;
@@ -38,14 +40,8 @@ public:
         State<Point> ***StateVector = matrixbuilder->build(line);
         g_i_mutex.unlock();
         Searchable<Point> *searchable = matrixbuilder;
-        cout << "From Here" << endl;
-        for (int i = 0; i <= cols; i++) {
-            for (int j = 0; j <= rows; j++) {
-                std::cout << StateVector[i][j]->getCost() << " ";
-            }
-            std::cout << std::endl;
-        }
         vector<State<Point> *> solution = searcher->search(searchable);
+
         string final = "";
         int sumOfCost = solution.at(0)->getCost();
         int solSize = solution.size();
@@ -74,6 +70,11 @@ public:
         }
         //   delete matrix;
         final.erase(final.length() - 2, 2);
+        cout<<"For Graph-";
+        cout<<"Matrix Size: "<<rows<<" * "<<cols<<endl;
+        cout<<"Solution Size: "<<solSize<<endl;
+
+
         return final;
     }
 
