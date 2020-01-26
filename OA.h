@@ -14,7 +14,6 @@
 #include "Astar.h"
 #include "Point.h"
 #include "MatrixBuilder.h"
-#include "GraphFile.h"
 #include <mutex>
 
 template<class P, class S>
