@@ -31,7 +31,7 @@ public:
         return current->getVisited();
     }
 
-    virtual list<State<T> *> getAllPossibleStates(State<T> *s, char type) = 0;
+    virtual list<State<T> *> getAllPossibleStates(State<T> *s) = 0;
 
     virtual void setCurr(State<T> *curr) = 0;
 

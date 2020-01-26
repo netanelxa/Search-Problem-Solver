@@ -92,7 +92,7 @@ public:
             }
             list<State<T> *> adjacent;
             try {
-                adjacent = searchable->getAllPossibleStates(n, 'b');
+                adjacent = searchable->getAllPossibleStates(n);
             } catch (exception &e) {
             }
             for (State<T> *adj : adjacent) { ;          //check adj cells

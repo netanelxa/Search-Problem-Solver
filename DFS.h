@@ -56,7 +56,7 @@ public:
         curr->setVisited();
         evaluated++;
         searchable->setCurr(curr);
-        list<State<T> *> succerssors = searchable->getAllPossibleStates(curr, 'b');  //developing adj cells
+        list<State<T> *> succerssors = searchable->getAllPossibleStates(curr);  //developing adj cells
         for (State<T> *state : succerssors) {
             bool visited = state->getVisited();
             if (!visited) {

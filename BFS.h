@@ -50,7 +50,7 @@ public:
                 }
                 return back;
             }
-            list<State<T> *> succerssors = searchable->getAllPossibleStates(n, 'b'); //developing adj cells
+            list<State<T> *> succerssors = searchable->getAllPossibleStates(n); //developing adj cells
             for (State<T> *state : succerssors) {
                 bool visited = state->getVisited();
                 if (!visited) {

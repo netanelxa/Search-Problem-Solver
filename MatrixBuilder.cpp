@@ -94,7 +94,7 @@ bool MatrixBuilder::isGoalState(State<Point> *state) {
 
 
 //the method gets all possible next moves (all directions) push and returns it to adj list.
-list<State<Point> *> MatrixBuilder::getAllPossibleStates(State<Point> *s, char type) {
+list<State<Point> *> MatrixBuilder::getAllPossibleStates(State<Point> *s) {
     list<State<Point> *> adj;
     int x = s->getState()->getX();
     int y = s->getState()->getY();

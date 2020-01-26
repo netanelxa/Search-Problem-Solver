@@ -42,7 +42,7 @@ public:
 
     virtual State<Point> *getInitialState();
 
-    virtual list<State<Point> *> getAllPossibleStates(State<Point> *s, char type);
+    virtual list<State<Point> *> getAllPossibleStates(State<Point> *s);
 
     virtual void initDis();
 

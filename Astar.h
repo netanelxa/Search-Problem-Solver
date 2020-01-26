@@ -92,7 +92,7 @@ public:
                 return back;
             }
 
-            list<State<T> *> adjacent = searchable->getAllPossibleStates(n, 'b');
+            list<State<T> *> adjacent = searchable->getAllPossibleStates(n);
             for (State<T> *adj : adjacent) {   //check adj cells
 
                 bool exist = isExist(openList, adj);
