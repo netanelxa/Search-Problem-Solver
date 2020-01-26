@@ -16,15 +16,19 @@
 #include "MatrixBuilder.h"
 #include <mutex>
 
+/**
+*Object Adaptor design pattern.
+ */
+
 template<class P, class S>
 class OA : public Solver<P, S> {
     Searcher<Point> *searcher;
+
 
 public:
     OA(Searcher<Point> *searcher1) {
         this->searcher = searcher1;
     }
-
 
     virtual S solve(P line) {
         size_t rows = std::count(line.begin(), line.end(), '\n') - 4;
@@ -33,7 +37,7 @@ public:
             if (line[i] == ',')
                 cols++;
         }
-        auto *matrixbuilder = new MatrixBuilder(rows, cols);
+        auto *matrixbuilder = new MatrixBuilder(rows, cols);  //build new matrix- the problem
         mutex g_i_mutex;
         g_i_mutex.lock();
         State<Point> ***StateVector = matrixbuilder->build(line);
@@ -42,7 +46,7 @@ public:
         vector<State<Point> *> solution = searcher->search(searchable);
 
         string final = "";
-        int sumOfCost = solution.at(0)->getCost();
+        int sumOfCost = solution.at(0)->getCost();          //conclusion and preparing path
         int solSize = solution.size();
         for (unsigned long i = 0; i < solution.size() - 1; i++) {
             int x1 = solution.at(i)->getState()->getX();
@@ -69,11 +73,9 @@ public:
         }
         //   delete matrix;
         final.erase(final.length() - 2, 2);
-        cout<<"For Graph-";
-        cout<<"Matrix Size: "<<rows<<" * "<<cols<<endl;
-        cout<<"Solution Size: "<<solSize<<endl;
-
-
+        cout<<"Matrix Size: "<<rows+1<<" * "<<cols+1<<endl;
+        cout<<"Number of nodes: "<<solSize+1<<endl;
+        cout<<"Path: "<<final<<endl;
         return final;
     }
 

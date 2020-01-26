@@ -11,6 +11,10 @@
 #include <iostream>
 #include "FileCacheManager.h"
 #include "CacheManager.h"
+
+/**
+*header of MyTestClientHandler.
+ */
 using namespace std;
 
 class MyTestClientHandler : public ClientHandler {

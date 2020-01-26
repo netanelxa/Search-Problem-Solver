@@ -15,6 +15,10 @@
 #include <mutex>
 using namespace std;
 
+/**
+* MatrixBuilder's header
+ */
+
 class MatrixBuilder : public Searchable<Point> {
     State<Point> ***matrix;
     int cols;

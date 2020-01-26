@@ -4,7 +4,9 @@
 
 #ifndef EX4_POINT_H
 #define EX4_POINT_H
-
+/**
+*header of Point
+ */
 
 class Point {
     int x;

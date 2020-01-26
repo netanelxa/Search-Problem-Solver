@@ -7,7 +7,9 @@
 
 
 #include <string>
-
+/**
+*ClientHandler header
+ */
 class ClientHandler {
 public:
     virtual void handleClient(int sockfd) = 0;

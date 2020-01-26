@@ -12,7 +12,10 @@
 #include <queue>
 #include <algorithm>
 
-//class T;
+/**
+*Implementation of A* algorithm.
+ */
+
 using namespace std;
 template <class T>
 class AStar :  public Searcher<T> {
@@ -32,6 +35,8 @@ public:
         pathCost = 0;
     }
 
+
+    //checks if a specific state is in Cmp priority queue.
     bool isExist( priority_queue<State<T> *, vector<State<T> *>, Cmp> open, State<T> *state) {
         while (!open.empty()) {
             if (state->equals(open.top())) {
@@ -41,6 +46,8 @@ public:
         }
         return false;
     }
+
+    //updates priority queue.
     priority_queue<State<T>*,vector<State<T>*>,Cmp> updateQueue(priority_queue<State<T>*, vector<State<T>*>, Cmp> &queueOpen) {
         priority_queue<State<T>*,vector<State<T>*>,Cmp> temp;
         while (!queueOpen.empty()) {
@@ -51,6 +58,7 @@ public:
         return temp;
     }
 
+    //A* algorithm implementation.
     virtual vector<State<T> *> search(Searchable<T> *searchable) {
         priority_queue<State<T> *, vector<State<T> *>, Cmp> openList;
         openList.push(searchable->getInitialState());
@@ -58,17 +66,16 @@ public:
         vector<State<T> *> path;
         while (!openList.empty()) {
             State<T> *n = openList.top();
-            // Remove this vertex from the open list
             openList.pop();
             evaluated++;
-            // Add this vertex to the closed list
             n->setVisited();
             closed.insert(n);
             int s=n->getCost();
             auto a=n->getState();
             auto b= searchable->getGoalState();
+
+            //reaching goal state, return the path.
             if (searchable->isGoalState(n)) {
-                //evaluated++;
                 path.push_back(n);
                 while (!n->equals(searchable->getInitialState())) {
                     path.push_back(n->getParent());
@@ -84,15 +91,18 @@ public:
                 }
                 return back;
             }
+
             list<State<T> *> adjacent = searchable->getAllPossibleStates(n, 'b');
-            for (State<T> *adj : adjacent) {
+            for (State<T> *adj : adjacent) {   //check adj cells
+
                 bool exist = isExist(openList, adj);
                 if (!exist && closed.count(adj) != 1) {
                     adj->setParent(n);
                     adj->setHeur(searchable->calculateHValue(adj));
                     openList.push(adj);
                     adj->setDistance(n->getDistance() + adj->getCost());
-                } else if (adj->getDistance() > n->getDistance() + adj->getCost()) {
+                } else if (adj->getDistance() > n->getDistance() + adj->getCost()) {   //developing adj cells in matrix
+
                     adj->setDistance(n->getDistance() + adj->getCost());
                     adj->setParent(n);
                     adj->setHeur(searchable->calculateHValue(adj));

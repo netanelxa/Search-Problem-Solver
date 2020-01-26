@@ -6,6 +6,9 @@
 #define EX4_SOLVER_H
 
 #include "Searchable.h"
+/**
+*this class represents solver object
+ */
 
 template<class P, class S>
 class Solver {

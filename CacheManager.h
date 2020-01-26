@@ -4,7 +4,9 @@
 
 #ifndef EX4_CACHEMANAGER_H
 #define EX4_CACHEMANAGER_H
-
+/**
+*CacheManager header.
+ */
 template<class P, class S>
 class CacheManager {
 public:

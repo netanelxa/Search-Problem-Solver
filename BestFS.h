@@ -4,8 +4,6 @@
 
 #ifndef EX4_BESTFS_H
 #define EX4_BESTFS_H
-
-
 #include "Searcher.h"
 #include <unordered_set>
 #include <vector>
@@ -14,6 +12,11 @@
 #include "State.h"
 
 using namespace std;
+
+
+/**
+*Implementation of Best First Search algorithm.
+ */
 
 template<class T>
 class BestFS : public Searcher<T> {
@@ -29,11 +32,13 @@ private:
     };
 
 public:
+    //constructor
     BestFS() {
         evaluated = 0;
         pathCost = 0;
     }
 
+    //checks if a specific state is in Cmp priority queue.
     bool isExist(priority_queue<State<T> *, vector<State<T> *>, Cmp> open, State<T> *state) {
         while (!open.empty()) {
             if (state->equals(open.top())) {
@@ -44,6 +49,9 @@ public:
         return false;
     }
 
+
+
+    //updates priority queue.
     priority_queue<State<T> *, vector<State<T> *>, Cmp>
     updateQueue(priority_queue<State<T> *, vector<State<T> *>, Cmp> &queueOpen) {
         priority_queue<State<T> *, vector<State<T> *>, Cmp> temp;
@@ -55,6 +63,7 @@ public:
         return temp;
     }
 
+    //BestFs algorithm implementation.
     virtual vector<State<T> *> search(Searchable<T> *searchable) {
         priority_queue<State<T> *, vector<State<T> *>, Cmp> openList;
         openList.push(searchable->getInitialState());
@@ -65,10 +74,8 @@ public:
             State<T> *n = openList.top();
             openList.pop();
             closed.insert(n);
-            /*if(n->getParent() != NULL){
-                n->setDistance(n->getParent()->getDistance());
-            }*/
 
+            //reaching goal state, return the path.
             if (searchable->isGoalState(n)) {
                 path.push_back(n);
                 while (!n->equals(searchable->getInitialState())) {
@@ -87,9 +94,8 @@ public:
             try {
                 adjacent = searchable->getAllPossibleStates(n, 'b');
             } catch (exception &e) {
-                //out << "b";
             }
-            for (State<T> *adj : adjacent) { ;
+            for (State<T> *adj : adjacent) { ;          //check adj cells
                 bool exist = isExist(openList, adj);
                 if (!exist && closed.count(adj) != 1) {
                     adj->setParent(n);
@@ -97,26 +103,15 @@ public:
                     openList.push(adj);
                 } else if (adj->getDistance() > n->getDistance() + adj->getCost()) {
                     bool inOpen = isExist(openList, adj);
-                    //if (!inOpen) {
-                    //openList.push(adj);
-                    //evaluated++;
-                    //} else {
+
                     adj->setDistance(n->getDistance() + adj->getCost());
                     adj->setParent(n);
                     openList = updateQueue(openList);
-                    //}
+
                 }
             }
         }
         return path;
-    }
-
-    int getNumberOfNodesEvaluated() {
-        return evaluated;
-    }
-
-    double getPathCost() {
-        return pathCost;
     }
 
 

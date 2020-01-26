@@ -9,7 +9,9 @@
 #include "Solver.h"
 #include "string"
 using namespace std;
-
+/**
+*header of StringReverser
+ */
 class StringReverser : public Solver<string,string>{
 
   public:

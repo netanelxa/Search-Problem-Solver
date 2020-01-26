@@ -9,6 +9,10 @@
 #include <thread>
 #include "vector"
 #include "Server.h"
+
+/**
+*header of MyParallelServer
+ */
 using namespace std;
 class MyParallelServer: public server_side::Server{
 vector<std::thread> m_threads;

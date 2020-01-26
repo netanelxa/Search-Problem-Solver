@@ -4,6 +4,9 @@
 
 #include "MatrixBuilder.h"
 #include <mutex>
+
+
+
 MatrixBuilder::MatrixBuilder(size_t rows, int cols) {
     this->rows = rows;
     this->cols = cols;
@@ -11,6 +14,8 @@ MatrixBuilder::MatrixBuilder(size_t rows, int cols) {
 
 
 State<Point> ***MatrixBuilder::build(string line) {
+
+    //reading matrix from file and insert values into matrix of states.
 
      line.erase(line.rfind('e'), line.length() - line.rfind('e'));
     string x = line.substr(line.rfind(',') + 1, line.rfind('\n') - line.rfind(',') - 1);
@@ -25,7 +30,7 @@ State<Point> ***MatrixBuilder::build(string line) {
     line.erase(line.rfind('\n') + 1, line.length() - line.rfind('\n') + 1);
     State<Point> ***matrix = new State<Point> **[rows + 2];
     for (int i = 0; i <= rows; ++i)
-        matrix[i] = new State<Point> *[cols + 2];
+        matrix[i] = new State<Point> *[cols + 2];   //create state object from values in file (indexes and weight).
     int i = 0;
     int j = 0;
     int k = 0;
@@ -59,9 +64,9 @@ State<Point> ***MatrixBuilder::build(string line) {
         k++;
     }
     double startCost = matrix[startPoint->getX()][startPoint->getY()]->getCost();
-    this->setInitalState(new State<Point>(startCost, startPoint));
+    this->setInitalState(new State<Point>(startCost, startPoint));  //set start point of path.
     double endCost = matrix[exitPoint->getX()][exitPoint->getY()]->getCost();
-    this->setGoalState(new State<Point>(endCost, exitPoint));
+    this->setGoalState(new State<Point>(endCost, exitPoint));  //set end point of path.
     this->current = matrix[0][0];
     this->matrix = matrix;
     return matrix;
@@ -88,6 +93,7 @@ bool MatrixBuilder::isGoalState(State<Point> *state) {
 }
 
 
+//the method gets all possible next moves (all directions) push and returns it to adj list.
 list<State<Point> *> MatrixBuilder::getAllPossibleStates(State<Point> *s, char type) {
     list<State<Point> *> adj;
     int x = s->getState()->getX();
@@ -120,29 +126,18 @@ list<State<Point> *> MatrixBuilder::getAllPossibleStates(State<Point> *s, char t
     if (up != nullptr) {
         adj.push_back(up);
     }
-    /*} else {
-        if (down != nullptr) {
-            adj.push_back(down);
-        }
-        if (right != nullptr) {
-            adj.push_back(right);
-        }
-        if (left != nullptr) {
-            adj.push_back(left);
-        }
-        if (up != nullptr) {
-            adj.push_back(up);
-        }
-    }*/
 
     return adj;
 }
 
 
+//set current state
 void MatrixBuilder::setCurr(State<Point> *curr) {
     this->current = curr;
 }
 
+
+//calculates the accumulated weight of path.
 double MatrixBuilder::calculateHValue(State<Point> *cur) {
     int xCur = cur->getState()->getX();
     int yCur = cur->getState()->getY();
@@ -151,7 +146,6 @@ double MatrixBuilder::calculateHValue(State<Point> *cur) {
     double disMan = abs(xCur - xGoal) +
                     abs(yCur - yGoal);
     double total = disMan + cur->getCost() + cur->getParent()->getDistance();
-    //cur->setHeur(total);
     return total;
 
 }

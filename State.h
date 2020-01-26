@@ -4,9 +4,11 @@
 
 #ifndef EX4_STATE_H
 #define EX4_STATE_H
-
-
 #include <list>
+
+/**
+*this class represents state object
+ */
 
 using namespace std;
 template <class T>

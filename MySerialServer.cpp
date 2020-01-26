@@ -7,6 +7,10 @@
 
 using namespace std;
 
+/**
+*this class handles one client at a time.
+ */
+
 void timeout(double time, int sockfd) {
     struct timeval tv;
     tv.tv_sec = time;

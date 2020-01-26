@@ -6,6 +6,9 @@
 #define EX4_SEARCHABLE_H
 
 #include "State.h"
+/**
+*this class represents searchable object
+ */
 
 template<class T>
 class Searchable {

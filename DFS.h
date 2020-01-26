@@ -10,6 +10,10 @@
 #include "State.h"
 #include "vector"
 
+
+/**
+*Implementation of DFS algorithm.
+ */
 template<class T>
 class DFS : public Searcher<T> {
 private:
@@ -21,17 +25,19 @@ public:
         evaluated = 0;
     }
 
+    //DFS implementation
     virtual vector<State<T> *> search(Searchable<T> *searchable) {
-
         searchable->setCurrVisited();
         vector<State<T> *> trace;
         this->helpSearch(searchable, searchable->getInitialState(), trace);
         return trace;
     }
 
+
+
     int helpSearch(Searchable<T> *searchable, State<T> *curr, vector<State<T> *> &trace) {
        auto a=curr->getState();
-        if (searchable->isGoalState(curr)) {
+        if (searchable->isGoalState(curr)) {  //reaching goal state and return path to "search" function
             evaluated++;
             while (curr->getParent() != nullptr) {
                 trace.push_back(curr);
@@ -50,7 +56,7 @@ public:
         curr->setVisited();
         evaluated++;
         searchable->setCurr(curr);
-        list<State<T> *> succerssors = searchable->getAllPossibleStates(curr, 'b');
+        list<State<T> *> succerssors = searchable->getAllPossibleStates(curr, 'b');  //developing adj cells
         for (State<T> *state : succerssors) {
             bool visited = state->getVisited();
             if (!visited) {

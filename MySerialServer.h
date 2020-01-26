@@ -14,6 +14,10 @@
 #include <unistd.h>
 #include <thread>
 #include <string>
+
+/**
+*header of MySerialServer.
+ */
 class MySerialServer : public server_side::Server {
 public:
     virtual void open(int port, ClientHandler *c);

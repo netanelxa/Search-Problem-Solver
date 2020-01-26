@@ -14,6 +14,10 @@
 #include "FileCacheManager.h"
 #include "MyClientHandler.h"
 
+/**
+*this class represents boot namespace. The class contains the main and boots the class MySerialServer.
+ */
+
 namespace boot {
     class Main {
     public:
@@ -21,9 +25,7 @@ namespace boot {
 
         void main(int port) {
             server_side::Server *ps = new MyParallelServer();
-            //the best algorithm for matrix problem
             ClientHandler *ch = new MyClientHandler();
-            //open the connection and solve problems
             ps->open(port, ch);
         }
     };

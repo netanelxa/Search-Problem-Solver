@@ -5,7 +5,12 @@
 
 #define bufferlength 1024
 
+/**
+*this class reads and handles problem from client.
+ */
 
+
+//return problem from client
 string MyClientHandler::getData(int sock_id) {
     string curr_line;
     string problem;
@@ -19,6 +24,7 @@ string MyClientHandler::getData(int sock_id) {
     return problem;
 }
 
+//read one line from client's problem
 string MyClientHandler::getLineFromSocket(int sock_id) {
     char buf[bufferlength];
     ssize_t readen_bytes;
@@ -33,6 +39,8 @@ string MyClientHandler::getLineFromSocket(int sock_id) {
     return buf;
 }
 
+
+
 void MyClientHandler::handleClient(int sockfd) {
     this->socknumber = sockfd;
     Searcher<Point> *DFSsearcher = new DFS<Point>();
@@ -43,33 +51,27 @@ void MyClientHandler::handleClient(int sockfd) {
     string line;
     string temp_buffer;
     vector<string> matrix_vec;
-    mutex locker1;
-    //locker1.lock();
-    searchsolver = new OA<string, string>(BestFSsearcher);
+
+    searchsolver = new OA<string, string>(BestFSsearcher); //using Object Adaptor
     cm = new FileCacheManager<string,string>();
     line = getData(this->socknumber);
-    //locker1.unlock();
-    //cout << line << endl;
-  //  locker1.lock();
-    if (cm->get(line)!="-1") {
+    if (cm->get(line)!="-1") {            // if solution exists in cache- send solution to client.
         string n = cm->get(line);
         const char *nsend = n.c_str();
         send(this->socknumber, nsend, strlen(nsend), 0);
-        cout<<"sent get:"<<nsend<<endl;
-        //locker1.unlock();
+      //  cout<<"sent get:"<<nsend<<endl;
     } else {
-        string answer = searchsolver->solve(line);
+        string answer = searchsolver->solve(line);   //else- solve problem
         cm->insert(line, answer);
         string n = cm->get(line);
         const char *nsend = n.c_str();
         send(this->socknumber, nsend, strlen(nsend), 0);
-        cout<<"sent: "<<nsend<<endl;
-       // locker1.unlock();
+    //    cout<<"sent: "<<nsend<<endl;
     }
 
 }
 
-
+//return true if the buffer reached end of problem.
 bool MyClientHandler::isEnd(string buffer) {
     int x = buffer.find("end");
     if (x < 0)

@@ -11,6 +11,11 @@
 #include "ClientHandler.h"
 #include "MyClientHandler.h"
 
+/**
+*this class handles multiple clients at the same time.
+ */
+
+//constructor
 MyParallelServer::MyParallelServer() {}
 
 MyParallelServer::~MyParallelServer() {

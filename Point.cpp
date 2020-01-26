@@ -4,6 +4,10 @@
 
 #include "Point.h"
 
+/**
+*this class represents point object
+ */
+
 Point::Point(int x, int y) {
     this->x = x;
     this->y = y;

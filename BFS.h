@@ -4,11 +4,14 @@
 
 #ifndef EX4_BFS_H
 #define EX4_BFS_H
-
 #include <vector>
 #include <unordered_set>
 #include "Searcher.h"
 
+
+/**
+*Implementation of BFS algorithm.
+ */
 template<class T>
 class BFS : public Searcher<T> {
 private:
@@ -16,11 +19,13 @@ private:
     double pathCost;
 
 public:
+    //constructor
     BFS<T>() {
         evaluated = 0;
         pathCost = 0;
     }
 
+    //  bfs algorithm implementation.
     virtual vector<State<T> *> search(Searchable<T> *searchable) {
         list<State<T> *> openList;
         openList.push_back(searchable->getInitialState());
@@ -30,7 +35,7 @@ public:
         while (openList.size() > 0) {
             State<T> *n = openList.front();
             openList.pop_front();
-            if (searchable->isGoalState(n)) {
+            if (searchable->isGoalState(n)) {  //reaching goal state and return path
                 evaluated++;
                 while (n->getParent() != nullptr) {
                     trace.push_back(n);
@@ -45,7 +50,7 @@ public:
                 }
                 return back;
             }
-            list<State<T> *> succerssors = searchable->getAllPossibleStates(n, 'b');
+            list<State<T> *> succerssors = searchable->getAllPossibleStates(n, 'b'); //developing adj cells
             for (State<T> *state : succerssors) {
                 bool visited = state->getVisited();
                 if (!visited) {

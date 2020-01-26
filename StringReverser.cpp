@@ -6,6 +6,8 @@
 
 StringReverser::StringReverser(){}
 
+
+//return the reverse of a string
 string StringReverser::solve(string p) {
     int n = p.length();
     for (int i = 0; i < n / 2; i++)

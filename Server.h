@@ -7,6 +7,9 @@
 
 #include "ClientHandler.h"
 
+/**
+*this class represents server.
+ */
 namespace server_side {
     class Server {
     public:

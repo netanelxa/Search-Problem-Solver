@@ -8,10 +8,12 @@
 #include "Searchable.h"
 #include "Solver.h"
 #include "vector"
+/**
+*this class represents searcher object
+ */
 template<class T>
 class Searcher {
 public:
-    //virtual T search(Searchable<T> src) = 0;
     virtual vector<State<T>*> search(Searchable<T>* searchable)=0;
     };
 
