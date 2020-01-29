@@ -19,7 +19,7 @@ void MyClientHandler::handleClient(int sockfd) {
     string line;
     string temp_buffer;
     vector<string> matrix_vec;
-    searchsolver = new OA<string, string>(BestFSsearcher); //using Object Adaptor
+    searchsolver = new OA<string, string>(ASsercher); //using Object Adaptor
     cm = new FileCacheManager<string, string>();
     memset(buffer, 0, bufferlength);
     int i = 0;
